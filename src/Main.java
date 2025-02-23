@@ -1,32 +1,17 @@
+import ru.netology.service.CustomsService;
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-        /*
-        Задание 1 (обязательное)
-        Напишите программу, которая при запуске выводит ваше имя и фамилию на латинице.
-        */
+        System.out.print("Введите цену товара (в руб.): ");
+        int price = scanner.nextInt();
 
-        System.out.println("Maxim Mavritskiy");
+        System.out.print("Введите вес товара (в кг.): ");
+        int weight = scanner.nextInt();
 
-        /*
-        Задание 2
-        Напишите программу, в которой заведены две целочисленные переменные:
-
-        income для хранения размера доходов
-        spending для хранения размера расходов
-        Программа должна выводить на экран сообщение о том, сколько денег осталось на счету. Не считайте
-        в уме итоговую сумму, расчёт итоговой суммы должна производить сама программа.
-
-        Пример вывода программы
-        При доходах в 44 тыс. и расходах в 30 тыс. вывод программы должен быть таким:
-        Итого (руб):
-        14000 */
-
-        int income = 44000;
-        int spending = 30000;
-        int remainingAmount = income - spending;
-
-        System.out.println("Итого (руб):");
-        System.out.println(remainingAmount);
+        int duty = CustomsService.calculateCustoms(price, weight);
+        System.out.println("Размер пошлины (в руб.) составит: " + duty);
     }
 }
