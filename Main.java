@@ -12,7 +12,7 @@ public class Main {
     }
 
     public static void compare(int day) {
-        System.out.println("=== День " + day + " ===");
+        System.out.println("=== Day " + day + " ===");
         int[] startNumbers = { 21, 1, 20, 23 };
         int iterative = chooseHobbyIterative(startNumbers, day);
         int recursive = chooseHobbyRecursive(startNumbers, day);
@@ -33,20 +33,23 @@ public class Main {
     }
 
     public static int chooseHobbyIterative(int[] startNumbers, int day) {
-        List<Integer> numbers = new ArrayList<>();
+        if (day == 1) return startNumbers[0];
+        if (day == 2) return startNumbers[1];
+        if (day == 3) return startNumbers[2];
+        if (day == 4) return startNumbers[3];
 
+        List<Integer> numbers = new ArrayList<>();
         numbers.add(startNumbers[0]);
         numbers.add(startNumbers[1]);
         numbers.add(startNumbers[2]);
         numbers.add(startNumbers[3]);
 
-        for (int d = 0; d < day; d++) {
-            int index = d + 4;
-            int prev = numbers.get(index - 1);
-            int prePrePrev = numbers.get(index - 3);
+        for (int d = 5; d <= day; d++) {
+            int prev = numbers.get(d - 2);
+            int prePrePrev = numbers.get(d - 4);
             numbers.add((prev * prePrePrev) % 10 + 1);
         }
 
-        return numbers.get(numbers.size() - 1);
+        return numbers.get(day - 1);
     }
 }
