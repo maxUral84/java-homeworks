@@ -3,6 +3,7 @@ import java.util.Arrays;
 
 public class Main {
     private static final int TEAM_SIZE = 10;
+
     public static void main(String[] args) throws IOException {
         int[][] teams = {
                 { 45, 31, 24, 22, 20, 17, 14, 13, 12, 10 },
@@ -32,20 +33,12 @@ public class Main {
         int[] mergedTeam = new int[TEAM_SIZE];
         int i = 0, j = 0, k = 0;
 
-        while (i < teamA.length && j < teamB.length && k < 10) {
+        while (k < TEAM_SIZE) {
             if (teamA[i] >= teamB[j]) {
                 mergedTeam[k++] = teamA[i++];
             } else {
                 mergedTeam[k++] = teamB[j++];
             }
-        }
-
-        while (k < TEAM_SIZE && i < teamA.length) {
-            mergedTeam[k++] = teamA[i++];
-        }
-
-        while (k < TEAM_SIZE && j < teamB.length) {
-            mergedTeam[k++] = teamB[j++];
         }
 
         return mergedTeam;
