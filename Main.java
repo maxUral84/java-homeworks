@@ -1,53 +1,53 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.Arrays;
 
 public class Main {
-    public static void main(String[] args) {
-        compare(1);
-        compare(2);
-        compare(5);
-        compare(15);
+    private static final int TEAM_SIZE = 10;
+    public static void main(String[] args) throws IOException {
+        int[][] teams = {
+                { 45, 31, 24, 22, 20, 17, 14, 13, 12, 10 },
+                { 31, 18, 15, 12, 10, 8, 6, 4, 2, 1 },
+                { 51, 30, 10, 9, 8, 7, 6, 5, 2, 1 }
+        };
+
+        int[] nationalTeam = mergeAll(teams);
+        System.out.println(Arrays.toString(nationalTeam));
     }
 
-    public static void compare(int day) {
-        System.out.println("=== Day " + day + " ===");
-        int[] startNumbers = { 21, 1, 20, 23 };
-        int iterative = chooseHobbyIterative(startNumbers, day);
-        int recursive = chooseHobbyRecursive(startNumbers, day);
-        System.out.println("Iterative = " + iterative + " | Recursive = " + recursive);
-        System.out.println();
-    }
-
-    public static int chooseHobbyRecursive(int[] startNumbers, int day) {
-        if (day == 1) return startNumbers[0];
-        if (day == 2) return startNumbers[1];
-        if (day == 3) return startNumbers[2];
-        if (day == 4) return startNumbers[3];
-
-        int prev = chooseHobbyRecursive(startNumbers, day - 1);
-        int prePrePrev = chooseHobbyRecursive(startNumbers, day - 3);
-
-        return (prev * prePrePrev) % 10 + 1;
-    }
-
-    public static int chooseHobbyIterative(int[] startNumbers, int day) {
-        if (day == 1) return startNumbers[0];
-        if (day == 2) return startNumbers[1];
-        if (day == 3) return startNumbers[2];
-        if (day == 4) return startNumbers[3];
-
-        List<Integer> numbers = new ArrayList<>();
-        numbers.add(startNumbers[0]);
-        numbers.add(startNumbers[1]);
-        numbers.add(startNumbers[2]);
-        numbers.add(startNumbers[3]);
-
-        for (int d = 5; d <= day; d++) {
-            int prev = numbers.get(d - 2);
-            int prePrePrev = numbers.get(d - 4);
-            numbers.add((prev * prePrePrev) % 10 + 1);
+    public static int[] mergeAll(int[][] teams) {
+        if (teams.length == 0) {
+            return new int[0];
         }
 
-        return numbers.get(day - 1);
+        int[] nationalTeam = teams[0];
+
+        for (int i = 1; i < teams.length; i++) {
+            nationalTeam = merge(nationalTeam, teams[i]);
+        }
+
+        return nationalTeam;
+    }
+
+    public static int[] merge(int[] teamA, int[] teamB) {
+        int[] mergedTeam = new int[TEAM_SIZE];
+        int i = 0, j = 0, k = 0;
+
+        while (i < teamA.length && j < teamB.length && k < 10) {
+            if (teamA[i] >= teamB[j]) {
+                mergedTeam[k++] = teamA[i++];
+            } else {
+                mergedTeam[k++] = teamB[j++];
+            }
+        }
+
+        while (k < TEAM_SIZE && i < teamA.length) {
+            mergedTeam[k++] = teamA[i++];
+        }
+
+        while (k < TEAM_SIZE && j < teamB.length) {
+            mergedTeam[k++] = teamB[j++];
+        }
+
+        return mergedTeam;
     }
 }
