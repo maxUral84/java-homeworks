@@ -1,46 +1,27 @@
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Main {
-    private static final int TEAM_SIZE = 10;
-
     public static void main(String[] args) throws IOException {
-        int[][] teams = {
-                { 45, 31, 24, 22, 20, 17, 14, 13, 12, 10 },
-                { 31, 18, 15, 12, 10, 8, 6, 4, 2, 1 },
-                { 51, 30, 10, 9, 8, 7, 6, 5, 2, 1 }
-        };
+        LinkedStack stack = new LinkedStack();
 
-        int[] nationalTeam = mergeAll(teams);
-        System.out.println(Arrays.toString(nationalTeam));
-    }
+        System.out.println(stack); // EMPTY
 
-    public static int[] mergeAll(int[][] teams) {
-        if (teams.length == 0) {
-            return new int[0];
-        }
+        stack.push(5);
+        System.out.println(stack); // 5
 
-        int[] nationalTeam = teams[0];
+        stack.push(15);
+        System.out.println(stack); // 15 -> 5
 
-        for (int i = 1; i < teams.length; i++) {
-            nationalTeam = merge(nationalTeam, teams[i]);
-        }
+        stack.push(25);
+        System.out.println(stack); // 25 -> 15 -> 5
 
-        return nationalTeam;
-    }
+        System.out.println(stack.pop()); // 25
+        System.out.println(stack); // 15 -> 5
 
-    public static int[] merge(int[] teamA, int[] teamB) {
-        int[] mergedTeam = new int[TEAM_SIZE];
-        int i = 0, j = 0, k = 0;
+        System.out.println(stack.pop()); // 15
+        System.out.println(stack); // 5
 
-        while (k < TEAM_SIZE) {
-            if (teamA[i] >= teamB[j]) {
-                mergedTeam[k++] = teamA[i++];
-            } else {
-                mergedTeam[k++] = teamB[j++];
-            }
-        }
-
-        return mergedTeam;
+        System.out.println(stack.pop()); // 5
+        System.out.println(stack); // EMPTY
     }
 }
