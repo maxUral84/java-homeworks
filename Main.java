@@ -1,27 +1,47 @@
-import java.io.IOException;
+import java.io.*;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
-        LinkedStack stack = new LinkedStack();
+        // Заполнение дерева
+        // Названия переменных указывают на место заполняемого узла
+        // например, rl - повернуть на право, затем налево
+        // После заполнения дерево выводится на консоль, можете ориентироваться на него
 
-        System.out.println(stack); // EMPTY
+        Tree ll = new Tree("Александа");
+        Tree lr = new Tree("Владимир");
+        Tree l = new Tree("Борис");
+        l.setLeft(ll);
+        l.setRight(lr);
 
-        stack.push(5);
-        System.out.println(stack); // 5
+        Tree rl = new Tree("Иннокентий");
+        Tree rr = new Tree("Пантелеймон");
+        Tree r = new Tree("Константин");
+        r.setLeft(rl);
+        r.setRight(rr);
 
-        stack.push(15);
-        System.out.println(stack); // 15 -> 5
+        Tree root = new Tree("Зоя");
+        root.setLeft(l);
+        root.setRight(r);
 
-        stack.push(25);
-        System.out.println(stack); // 25 -> 15 -> 5
+        System.out.println(root); // Выведем дерево в консоль
 
-        System.out.println(stack.pop()); // 25
-        System.out.println(stack); // 15 -> 5
+        System.out.println("Проверка поиска по дереву:");
+        System.out.println(root.contains("Иннокентий")); // true
+        System.out.println(root.contains("Борис")); // true
+        System.out.println(root.contains("Анна")); // false
 
-        System.out.println(stack.pop()); // 15
-        System.out.println(stack); // 5
+        /* Ваше задание (нужно раскомментировать) */
+        System.out.println("Проверка на пирамидальность по длине имени");
 
-        System.out.println(stack.pop()); // 5
-        System.out.println(stack); // EMPTY
+        System.out.println(root.isNamePyramid()); // true
+
+        // Меняем имя в одном из узлов на Павел
+        // Пирамидальность должна нарушиться
+        // А из-за того что имя на ту же букву,
+        // в данном случае свойства дерева поиска сохрнаяются
+        rr.setName("Павел");
+        System.out.println(root.isNamePyramid()); // false
     }
+
 }
