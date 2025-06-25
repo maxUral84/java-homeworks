@@ -1,34 +1,31 @@
-import java.util.HashSet;
-import java.util.Set;
+import java.io.*;
 
 public class Main {
-    public static void main(String[] args) {
-        String source = "CACABABABCCCAABAC";
+    public static void main(String[] args) throws IOException {
+        Graph<String> socialNetwork = new Graph<>(); // создание графа
 
-        System.out.println(hasRepeats(source, 4)); // true
-        System.out.println(hasRepeats(source, 5)); // false
-    }
+        // создание вершин-страниц социальной сети
+        Vertex<String> petya = socialNetwork.createVertex("Петя");
+        Vertex<String> olya = socialNetwork.createVertex("Оля");
+        Vertex<String> dasha = socialNetwork.createVertex("Даша");
+        Vertex<String> katya = socialNetwork.createVertex("Катя");
 
-    public static boolean hasRepeats(String source, int size) {
-        Set<LazyString> slices = new HashSet<>();
-        LazyString prev = null;
+        // создание рёбер - добавления в друзья
+        socialNetwork.createEdge(petya, olya);
+        socialNetwork.createEdge(olya, dasha);
+        socialNetwork.createEdge(dasha, petya);
+        socialNetwork.createEdge(dasha, katya);
 
-        for (int i = 0; i <= source.length() - size; i++) {
-            LazyString slice;
-            if (prev == null) {
-                slice = new LazyString(source, i, i + size);
-            } else {
-                slice = prev.shiftRight();
-            }
+        Vertex<String> pasha = socialNetwork.createVertex("Паша");
+        Vertex<String> kostya = socialNetwork.createVertex("Костя");
 
-            if (slices.contains(slice)) {
-                return true;
-            } else {
-                slices.add(slice);
-            }
-            prev = slice;
-        }
+        socialNetwork.createEdge(pasha, kostya);
 
-        return false;
+        // поиск достижимости между анкетами
+        System.out.println(socialNetwork.isConnected(petya, olya)); // true
+        System.out.println(socialNetwork.isConnected(petya, katya)); // true
+        System.out.println(socialNetwork.isConnected(pasha, kostya)); // true
+        System.out.println(socialNetwork.isConnected(dasha, kostya)); // false
+
     }
 }
