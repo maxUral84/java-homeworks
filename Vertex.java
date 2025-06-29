@@ -4,13 +4,13 @@ import java.util.Objects;
 
 public class Vertex<T> {
     private T value;
-    private List<Vertex> adjacent = new ArrayList<>(); // список смежности
+    private List<Vertex<T>> adjacent = new ArrayList<>(); // список смешности
 
     public Vertex(T value) {
         this.value = value;
     }
 
-    public List<Vertex> getAdjacent() {
+    public List<Vertex<T>> getAdjacent() {
         return adjacent;
     }
 
