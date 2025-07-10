@@ -1,11 +1,27 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class GameInstaller {
+    // Константы для директорий
+    private static final String SRC_DIR = "src";
+    private static final String MAIN_DIR = "main";
+    private static final String TEST_DIR = "test";
+    private static final String RES_DIR = "res";
+    private static final String DRAWABLES_DIR = "drawables";
+    private static final String VECTORS_DIR = "vectors";
+    private static final String ICONS_DIR = "icons";
+    private static final String SAVEGAMES_DIR = "savegames";
+    private static final String TEMP_DIR = "temp";
+
+    // Константы для файлов
+    private static final String MAIN_JAVA = "Main.java";
+    private static final String UTILS_JAVA = "Utils.java";
+    private static final String TEMP_TXT = "temp.txt";
+    private static final String LOG_FILE = "temp.txt";
+
     private final StringBuilder log = new StringBuilder();
 
     public String installGame(String basePath) throws IOException {
@@ -55,38 +71,38 @@ public class GameInstaller {
 
     private void createDirectoryStructure(File baseDir) {
         String[] directories = {
-                "src",
-                "src/main",
-                "src/test",
-                "res",
-                "res/drawables",
-                "res/vectors",
-                "res/icons",
-                "savegames",
-                "temp"
+                SRC_DIR,
+                SRC_DIR + File.separator + MAIN_DIR,
+                SRC_DIR + File.separator + TEST_DIR,
+                RES_DIR,
+                RES_DIR + File.separator + DRAWABLES_DIR,
+                RES_DIR + File.separator + VECTORS_DIR,
+                RES_DIR + File.separator + ICONS_DIR,
+                SAVEGAMES_DIR,
+                TEMP_DIR
         };
 
         for (String dir : directories) {
-            File newDir = new File(baseDir, dir.replace("/", File.separator));
+            File newDir = new File(baseDir, dir);
             createDirectoryWithCheck(newDir);
         }
     }
 
     private void createFiles(File baseDir) throws IOException {
         String[] files = {
-                "src/main/Main.java",
-                "src/main/Utils.java",
-                "temp/temp.txt"
+                SRC_DIR + File.separator + MAIN_DIR + File.separator + MAIN_JAVA,
+                SRC_DIR + File.separator + MAIN_DIR + File.separator + UTILS_JAVA,
+                TEMP_DIR + File.separator + TEMP_TXT
         };
 
         for (String file : files) {
-            File newFile = new File(baseDir, file.replace("/", File.separator));
+            File newFile = new File(baseDir, file);
             createFileWithCheck(newFile);
         }
     }
 
     private void writeLogFile(File baseDir) throws IOException {
-        File tempFile = new File(baseDir, "temp/temp.txt");
+        File tempFile = new File(baseDir, TEMP_DIR + File.separator + LOG_FILE);
         if (tempFile.exists()) {
             try (FileWriter writer = new FileWriter(tempFile)) {
                 writer.write(log.toString());
@@ -97,7 +113,7 @@ public class GameInstaller {
 
     private void createDirectoryWithCheck(File dir) {
         if (dir.exists()) {
-            log.append("[SKIP] Directory already exists: ").append(dir.getAbsolutePath()).append("\n");
+            log.append("[OK] Directory already exists: ").append(dir.getAbsolutePath()).append("\n");
             return;
         }
 
@@ -110,7 +126,7 @@ public class GameInstaller {
 
     private void createFileWithCheck(File file) throws IOException {
         if (file.exists()) {
-            log.append("[SKIP] File already exists: ").append(file.getAbsolutePath()).append("\n");
+            log.append("[OK] File already exists: ").append(file.getAbsolutePath()).append("\n");
             return;
         }
 
