@@ -1,4 +1,3 @@
-// src/main/java/Paths.java
 import java.io.File;
 
 public class Paths {
