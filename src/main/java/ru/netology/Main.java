@@ -6,7 +6,16 @@ import com.google.gson.reflect.TypeToken;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -78,54 +87,52 @@ public class Main {
 
     // XML
     private static List<Employee> parseXML(String fileName) {
-        List<Employee> employees = new ArrayList<>();
+        try {
+            List<Employee> employees = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            StringBuilder xmlContent = new StringBuilder();
-            String line;
+            // 1. Создаем DocumentBuilder
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
 
-            while ((line = reader.readLine()) != null) {
-                xmlContent.append(line.trim());
+            // 2. Парсим XML файл в Document
+            Document doc = builder.parse(new File(fileName));
+
+            // 3. Получаем корневой элемент
+            Node root = doc.getDocumentElement();
+
+            // 4. Получаем список всех узлов "employee"
+            NodeList nodeList = root.getChildNodes();
+
+            // 5. Обрабатываем каждый узел
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+
+                // Пропускаем текстовые узлы (переносы строк и т.д.)
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
+
+                    // 6. Извлекаем данные из XML
+                    long id = Long.parseLong(getTagValue(element, "id"));
+                    String firstName = getTagValue(element, "firstName");
+                    String lastName = getTagValue(element, "lastName");
+                    String country = getTagValue(element, "country");
+                    int age = Integer.parseInt(getTagValue(element, "age"));
+
+                    // 7. Создаем объект Employee и добавляем в список
+                    employees.add(new Employee(id, firstName, lastName, country, age));
+                }
             }
-
-            String xml = xmlContent.toString();
-            int pos = 0;
-
-            while ((pos = xml.indexOf("<employee>", pos)) != -1) {
-                int endPos = xml.indexOf("</employee>", pos);
-                if (endPos == -1) break;
-
-                String employeeXml = xml.substring(pos + "<employee>".length(), endPos);
-                pos = endPos + "</employee>".length();
-
-                long id = Long.parseLong(getTagValue(employeeXml, "id"));
-                String firstName = getTagValue(employeeXml, "firstName");
-                String lastName = getTagValue(employeeXml, "lastName");
-                String country = getTagValue(employeeXml, "country");
-                int age = Integer.parseInt(getTagValue(employeeXml, "age"));
-
-                employees.add(new Employee(id, firstName, lastName, country, age));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to parse XML file: " + fileName, e);
+            return employees;
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            throw new RuntimeException("Не удалось проанализировать XML-файл: " + fileName, e);
         }
-
-        return employees;
     }
 
-    private static String getTagValue(String xml, String tag) {
-        String openTag = "<" + tag + ">";
-        String closeTag = "</" + tag + ">";
-
-        int start = xml.indexOf(openTag);
-        if (start == -1) return "";
-
-        start += openTag.length();
-        int end = xml.indexOf(closeTag, start);
-
-        if (end == -1) return "";
-
-        return xml.substring(start, end).trim();
+    // Вспомогательный метод для получения значения тега
+    private static String getTagValue(Element element, String tagName) {
+        NodeList nodeList = element.getElementsByTagName(tagName);
+        Node node = nodeList.item(0);
+        return node.getTextContent();
     }
 
     // JSON
